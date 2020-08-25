@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "678110502639",
+    "firebase_url": "https://beautybooking-eca9e.firebaseio.com",
+    "project_id": "beautybooking-eca9e",
+    "storage_bucket": "beautybooking-eca9e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678110502639:android:47b7ab1898265837ab851a",
+        "android_client_info": {
+          "package_name": "com.example.beauty_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678110502639-4ds3em6flvq3nsab3u1pm51e2udgdt0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfC8Ec8FzfISJaIIMR8dnNjGEsx9vbpwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678110502639-4ds3em6flvq3nsab3u1pm51e2udgdt0o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
