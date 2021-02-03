@@ -18,6 +18,7 @@ import './screens/tabs_screen.dart';
 import './widgets/onlycustomer/c_editprofile.dart';
 import './widgets/onlyservice/s_editprofile.dart';
 import './screens/search_map_screen.dart';
+import './screens/rating_screen.dart';
 
 import './providers/currentuser.dart';
 
@@ -86,6 +87,7 @@ class MyApp extends StatelessWidget {
             FilterScreen.routename: (ctx)=>FilterScreen(),
             DetailScreen.routeName: (ctx)=>DetailScreen(),
             BusinessBooking.routeName: (ctx)=>BusinessBooking(),
+            RatingScreen.routeName: (ctx)=>RatingScreen(),
           },
         ));
   }

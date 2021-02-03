@@ -79,8 +79,8 @@ class _BookingScreenState extends State<BookingScreen> {
       masodikido = 20;
 
       currentItem = ModalRoute.of(context).settings.arguments as BookDetailItem;
-      // step = Duration(minutes: currentItem.duration);
-      step = Duration(minutes: 15);
+      step = Duration(minutes: currentItem.duration);
+      //step = Duration(minutes: 15);
 
       _calendarController = CalendarController();
       _selectedDay = DateTime.now();
@@ -145,6 +145,7 @@ class _BookingScreenState extends State<BookingScreen> {
         querySnapshot.documents.forEach((result) {
           if (result.documentID == date.toString().split(' ')[0].trim()) {
             bookingsList = result.data['booked'];
+            print("IDENEZZTESOOOOO " + bookingsList.toString());
           }
         });
       });
@@ -302,13 +303,6 @@ class _BookingScreenState extends State<BookingScreen> {
       DateTime endDate =
           temps.add(Duration(minutes: int.parse(element['duration'])));
 
-      // if ((timeSlotDate.isAfter(startDate) &&
-      //         timeSlotDateEnd.isBefore(endDate)) ||
-      //     timeSlotDate == startDate) {
-      //   resultBooked = true;
-      //   return;
-      // }
-
       if (((startDate.isBefore(timeSlotDate) &&
                   timeSlotDateEnd.isBefore(endDate)) ||
               (startDate.isAfter(timeSlotDate) &&
@@ -318,35 +312,12 @@ class _BookingScreenState extends State<BookingScreen> {
               (startDate.isBefore(timeSlotDate) &&
                   timeSlotDateEnd.isAfter(endDate))) &&
           !isOverLapping(startDate, endDate, timeSlotDate, timeSlotDateEnd)) {
-        // print(timeslot);
-        // print('-----------');
-        // print(timeSlotDate);
-        // print(timeSlotDateEnd);
-        // print('TS_TSE');
-        // print(startDate);
-        // print(endDate);
-        // print('-----------ENDDATE');
+      
         resultBooked = true;
         return resultBooked;
-        // return resultBooked;
+    
       }
 
-      // if (((startDate.isBefore(timeSlotDate) &&
-      //             endDate.isBefore(timeSlotDate)) &&
-      //         (startDate.isBefore(timeSlotDateEnd) &&
-      //             endDate.isBefore(timeSlotDateEnd))) ||
-      //     ((startDate.isAfter(timeSlotDate) && endDate.isAfter(timeSlotDate)) &&
-      //         (startDate.isAfter(timeSlotDateEnd) &&
-      //             endDate.isAfter(timeSlotDateEnd)))) {
-      //   print('-----------');
-      //   print(timeSlotDate);
-      //   print(timeSlotDateEnd);
-      //   print('TS_TSE');
-      //   print(startDate);
-      //   print(endDate);
-      //   resultBooked = false;
-      //   return resultBooked;
-      // }
     });
     return resultBooked;
   }
@@ -381,18 +352,7 @@ class _BookingScreenState extends State<BookingScreen> {
       return cancontinued;
     }
 
-    // bookingsList.forEach((element) {
-    //   // if (isalreadyinBookedMap(event)) {
-    //   print(element['event']);
-    //   if (element['event'] == event) {
-    //     cancontinued = false;
-    //     print('Hiba');
-    //     print(event);
-    //     return 'Hiba';
-    //   }
-    // });
-    // }
-    bookingsList.add(BookedHelper(event, '30', currentUser.uid).setMap());
+    bookingsList.add(BookedHelper(event, currentItem.duration.toString(), currentUser.uid, currentItem.titel).setMap());
 
     if (cancontinued) {
       await Firestore.instance
@@ -559,12 +519,13 @@ class BookedHelper {
   String event;
   String duration;
   String userid;
+  String eventTitel;
   Map<String, String> details;
 
-  BookedHelper(this.event, this.duration, this.userid);
+  BookedHelper(this.event, this.duration, this.userid, this.eventTitel);
 
   Map<String, String> setMap() {
-    details = {'event': event, 'duration': duration, 'userId': userid};
+    details = {'event': event, 'duration': duration, 'userId': userid, 'eventTitel': eventTitel};
     return details;
   }
 }

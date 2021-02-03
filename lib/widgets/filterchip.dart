@@ -4,6 +4,10 @@ import '../models/category.dart';
 import '../utilities/constans.dart';
 
 class FilterChipDisplay extends StatefulWidget {
+
+  final Function sendbackCategories;
+  FilterChipDisplay(this.sendbackCategories);
+
   @override
   _FilterChipDisplayState createState() => _FilterChipDisplayState();
 }
@@ -18,7 +22,9 @@ class _FilterChipDisplayState extends State<FilterChipDisplay> {
           alignment: Alignment.centerLeft,
           child: _titleContainer("Choose services"),
         ),
-        SizedBox(height: 20,),
+        SizedBox(
+          height: 20,
+        ),
         Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
           child: Align(
@@ -34,6 +40,7 @@ class _FilterChipDisplayState extends State<FilterChipDisplay> {
                   return filterChipWidget(
                     chipName: allofthecategories[index].title,
                     chipColor: allofthecategories[index].color,
+                    sendback: widget.sendbackCategories,
                   );
                 }),
               ),
@@ -52,8 +59,9 @@ class _FilterChipDisplayState extends State<FilterChipDisplay> {
 class filterChipWidget extends StatefulWidget {
   final String chipName;
   final Color chipColor;
+  Function sendback;
 
-  filterChipWidget({Key key, this.chipName, this.chipColor}) : super(key: key);
+  filterChipWidget({Key key, this.chipName, this.chipColor, this.sendback}) : super(key: key);
 
   @override
   _filterChipWidgetState createState() => _filterChipWidgetState();
@@ -61,6 +69,14 @@ class filterChipWidget extends StatefulWidget {
 
 class _filterChipWidgetState extends State<filterChipWidget> {
   var _isSelected = false;
+  static List<String> chosenCategories = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    chosenCategories=[];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +92,12 @@ class _filterChipWidgetState extends State<filterChipWidget> {
       onSelected: (isSelected) {
         setState(() {
           _isSelected = isSelected;
+          if (chosenCategories.contains(widget.chipName)) {
+            chosenCategories.remove(widget.chipName);
+          } else {
+            chosenCategories.add(widget.chipName);
+          }
+          widget.sendback(chosenCategories);
         });
       },
       selectedColor: Theme.of(context).primaryColor,

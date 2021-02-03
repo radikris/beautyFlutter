@@ -135,3 +135,12 @@ BoxDecoration nMboxInvert = BoxDecoration(
           color: mCL, offset: Offset(3, 3), blurRadius: 3, spreadRadius: -3),
     ]);
 
+class SearchParameters {
+  List<String> categories = [];
+  double rating;
+  double distance;
+  String sortby;
+  double loclat, loclng;
+  String directsearch;
+  SearchParameters({this.categories, this.rating, this.distance, this.sortby, this.loclat, this.loclng, this.directsearch});
+}

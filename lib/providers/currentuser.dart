@@ -8,6 +8,7 @@ class CurrentUser with ChangeNotifier{
   
   FirebaseUser user;
   DocumentSnapshot userData;
+  DocumentSnapshot userDataByID;
 
   Future<void> fetchUserData() async {
     user=await FirebaseAuth.instance.currentUser();
@@ -23,9 +24,14 @@ class CurrentUser with ChangeNotifier{
   DocumentSnapshot get userdata{
     return userData;
   }
+  DocumentSnapshot get userdatabyid{
+    return userDataByID;
+  }
 
   Future<void> fetchUserDataById(String uid) async {
-    userData=await Firestore.instance.collection('users').document(uid).get();
+    userDataByID=await Firestore.instance.collection('users').document(uid).get();
+
+    notifyListeners();
   }
 
 }

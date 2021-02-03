@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class SingleSelectionExample extends StatefulWidget {
   List<String> sortFilter;
+  Function sendbackFilter;
 
-  SingleSelectionExample(this.sortFilter);
+  SingleSelectionExample(this.sortFilter, this.sendbackFilter);
 
   @override
   _SingleSelectionExampleState createState() => _SingleSelectionExampleState();
@@ -31,6 +32,8 @@ class _SingleSelectionExampleState extends State<SingleSelectionExample> {
             behavior: HitTestBehavior.opaque,
             onTap: () {
               selectedValue = widget.sortFilter[index];
+              widget.sendbackFilter(selectedValue);
+          
               setState(() {});
             },
             child: Container(
@@ -45,6 +48,7 @@ class _SingleSelectionExampleState extends State<SingleSelectionExample> {
                       groupValue: selectedValue,
                       onChanged: (s) {
                         selectedValue = s;
+                        widget.sendbackFilter(selectedValue);
                         setState(() {});
                       }),
                   Text(widget.sortFilter[index])

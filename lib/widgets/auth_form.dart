@@ -41,7 +41,7 @@ class _AuthFormState extends State<AuthForm> {
     try {
       final isValid = _formKey.currentState.validate();
       FocusScope.of(context).unfocus();
-      if (_userPassword != _userConfirmPassword) {
+      if (_userPassword != _userConfirmPassword && !_isLogin) {
         print("jelszavak : " + _userPassword + " es " + _userConfirmPassword);
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text('The 2 passwords don\'t match'),

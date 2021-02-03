@@ -5,7 +5,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:beauty_app/main.dart';
 import 'package:beauty_app/utilities/constans.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,6 +25,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'choosephotos.dart';
 import '../openclosed.dart';
 import '../businessservices.dart';
+
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart' as Path;
 
 class SEditProfile extends StatefulWidget {
   DocumentSnapshot userData;
@@ -222,10 +224,36 @@ class _SEditProfileState extends State<SEditProfile> {
     }
   }
 
+  //uploadFile().whenComplete(() => Navigator.of(context).pop());
+
+  Future uploadFile() async {
+    int i = 1;
+
+    CollectionReference imgRef;
+    firebase_storage.Reference ref;
+
+    int i = 1;
+
+    for (var img in _image) {
+      setState(() {
+        val = i / _image.length;
+      });
+      ref = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('images/${Path.basename(img.path)}');
+      await ref.putFile(img).whenComplete(() async {
+        await ref.getDownloadURL().then((value) {
+          imgRef.add({'url': value});
+          i++;
+        });
+      });
+    }
+  }
+
   double calculateAveragePrice() {
     double average = 0;
     serviceList.forEach((element) {
-      average += int.parse(element['price']);
+      average += element['price'];
     });
     return average / serviceList.length;
   }
@@ -270,6 +298,11 @@ class _SEditProfileState extends State<SEditProfile> {
             ? resultCategory
             : widget.userData['category'],
         'averageprice': calculateAveragePrice(),
+        'rating':
+            widget.userData['rating'] == null ? 0 : widget.userData['rating'],
+        'ratingnum': widget.userData['ratingnum'] == null
+            ? 0
+            : widget.userData['ratingnum'],
       });
       setState(() {
         isUpload = false;
@@ -347,7 +380,7 @@ class _SEditProfileState extends State<SEditProfile> {
             : null,
         minLines: 1,
         maxLines: 3,
-        maxLength: mapKey=='username' ? 30: 100,
+        maxLength: mapKey == 'username' ? 30 : 100,
         onChanged: (value) {
           setState(() {
             if (mapKey == 'username') {
@@ -570,15 +603,14 @@ class _SEditProfileState extends State<SEditProfile> {
           _textFieldBuilder(
               'username', 'Business name', 'Business name', Icons.business),
           Divider(),
-          _textFieldBuilder('whyus', 'Why you', 'Why should they choose you?',
-              Icons.format_quote),
+          _textFieldBuilder('whyus', 'Why you? Help others find you!',
+              'Why should they choose you?', Icons.format_quote),
           Divider(),
           buildOpeningHours(),
           SizedBox(
             height: 10,
           ),
-          if (openingPicked)
-            OpenClosed(isopened, openstart, closeend),
+          if (openingPicked) OpenClosed(isopened, openstart, closeend),
           // Container(
           //   decoration: BoxDecoration(
           //     color: (isopened = isOpen(openstart, closeend))
@@ -625,8 +657,8 @@ class _SEditProfileState extends State<SEditProfile> {
               dropdownColor: lightmaincolor,
               hint: Text(categoryPicked ? resultCategory : 'Category'),
               items: <String>[
-                'Hairdresser',
-                'Wellness',
+                'Hair',
+                'Spa',
                 'Nails',
                 'Massage',
                 'Sport',

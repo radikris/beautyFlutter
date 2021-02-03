@@ -29,7 +29,7 @@ class MainDrawer extends StatelessWidget {
       SizedBox(height: 5),
       //My Profile, Privacy and Terms, About us, Contact us,Log out
       buildListTile('My profile', Icons.account_box, () {
-        Navigator.of(context).pushReplacementNamed('/');
+        Navigator.of(context).pushNamed('/profile-screen');
       }),
       ListDivider(),
       buildListTile('Settings', Icons.settings, () {
@@ -41,7 +41,7 @@ class MainDrawer extends StatelessWidget {
       }),
       ListDivider(),
       buildListTile('Contact us', Icons.mail, () {
-        //Navigator.of(context).pushReplacementNamed('/filters');
+        Navigator.of(context).pushReplacementNamed('/rating-screen');
       }),
       ListDivider(),
       buildListTile('Privacy and terms', Icons.business_center, () {
@@ -65,6 +65,7 @@ class MainDrawer extends StatelessWidget {
                   image: AssetImage("assets/images/icontry.png"),
                   fit: BoxFit.cover),
             ),
+            SizedBox(width: 2),
             Text(
               "Beauty booking app",
               style: TextStyle(

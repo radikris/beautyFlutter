@@ -1,11 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import '../utilities/constans.dart';
 import '../widgets/filterchip.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../widgets/singlechoice.dart';
 import 'filter_screen.dart';
+import '../widgets/onlycustomer/c_editprofile.dart';
 
 class SearchScreen extends StatefulWidget {
   static final routeName = '/search-screen';
@@ -15,16 +17,51 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  void _doneSearch() {
-    Navigator.of(context).pushNamed(FilterScreen.routename);
+  Future<void> _getCurrentUserLocation() async {
+    final locData = await Location().getLocation();
+
+    // locationRead = await LocationHelper.getPlaceAddress(
+    //     locData.latitude, locData.longitude);
+    // // setState(() {
+    // //   isLoading = false;
+    // // });
+
+    loclat = locData.latitude;
+    loclng = locData.longitude;
   }
 
+  void _doneSearch() async {
+    await _getCurrentUserLocation();
+
+    SearchParameters sparam = SearchParameters(
+        categories: chcategories,
+        rating: ratingstars,
+        distance: distance,
+        sortby: sortby,
+        loclat: loclat,
+        loclng: loclng);
+    // print(loclat);
+    // print(loclng);
+    Navigator.of(context).pushNamed(FilterScreen.routename, arguments: sparam);
+  }
+
+  void getbackCategories(List<String> choosencategories) {
+    chcategories = choosencategories;
+  }
+
+  void getbackFilter(String gbfilter) {
+    sortby = gbfilter;
+  }
+
+  List<String> chcategories = [];
   double ratingstars = 3;
   double distance = 2;
+  String sortby = 'Sort by Rating';
+  double loclat, loclng;
 
   List<String> sortFilter = [
-    'Sort by Price',
     'Sort by Rating',
+    'Sort by Price',
     'Sort by Distance',
   ];
 
@@ -52,7 +89,7 @@ class _SearchScreenState extends State<SearchScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Divider(color: Colors.grey[400], height: 10),
-                FilterChipDisplay(),
+                FilterChipDisplay(getbackCategories),
                 Divider(color: Colors.grey[400], height: 10),
                 Text(
                   'Select rating',
@@ -76,7 +113,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         color: Colors.amber,
                       ),
                       onRatingUpdate: (rating) {
-                        print(rating);
                         setState(() {
                           ratingstars = rating;
                         });
@@ -152,7 +188,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   'Sort by',
                   style: titelTextStyle,
                 ),
-                SingleSelectionExample(sortFilter),
+                SingleSelectionExample(sortFilter, getbackFilter),
                 Center(
                   child: RaisedButton(
                     elevation: 5.0,
